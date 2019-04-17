@@ -15,11 +15,18 @@ const weatherColorMap = {
   'snow': '#aae1fc'
 }
 Page({
+  onTapWeatherDetail(){
+    wx.redirectTo({
+      url: '/pages/list/list',
+    })
+  },
   data: {
     nowTemp: '14',
     nowWeather: 'Sunny',
     bgUrl: '/image/sunny-bg.png',
     forecast:[],
+    todayTemp:'5-6',
+    nowDate:''
   },
   onLoad(){
     this.getNow()
@@ -42,7 +49,7 @@ Page({
         let result = res.data.result
         this.setNow(result)
         this.setHourly(result)
-        
+        this.setDetail(result)
       },
       complete: ()=>{
         callback && callback()
@@ -79,5 +86,14 @@ Page({
       this.setData({
         forecast: forecast,
       })
+  },
+  setDetail(result){
+    let date = new Date()
+    let minTemp = result.today.minTemp
+    let maxTemp = result.today.maxTemp
+    this.setData({
+      nowDate: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} 今天`,
+      todayTemp: `${minTemp}° - ${maxTemp}° `
+    })
   }
 })

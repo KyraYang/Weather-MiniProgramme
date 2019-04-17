@@ -2,7 +2,14 @@
   <view class="temp">{{nowTemp}}</view>
   <view class='weather'>{{nowWeather}}</view>
   <image class='weather-bg' src="{{bgUrl}}" mode='scaleToFill'></image>
+  <view class='weather-detail' bindtap='onTapWeatherDetail'>
+    <view class='nowDate'>{{nowDate}}
+    </view>
+    <view class='estTemp'>{{todayTemp}}</view>
+    <image class='arrow' src='/image/arrow.png'></image>
+  </view>
 </view>
+
 <view class="timetips">
   <image class='timetips-icon' src='/image/time-icon.png'></image>
   <view class='timetips-text'>未来24小时天气预测</view>

@@ -1,0 +1,7 @@
+<view class='sevenDays' wx:for="{{sevenDays}}">
+<view class='day'>{{item.day}}
+<view class='date'>{{item.date}}</view></view>
+
+<view class='temp'>{{item.temp}}</view>
+<image class='icon' src="{{item.icon}}"></image>
+</view>
