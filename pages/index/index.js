@@ -18,7 +18,11 @@ Page({
   data: {
     nowTemp: '14',
     nowWeather: 'Sunny',
-    bgUrl: '/image/sunny-bg.png'
+    bgUrl: '/image/sunny-bg.png',
+    forecast:[1,2,3,4,5,6,7,8,9],
+    forecastTemp: '4',
+    forecastTime: '8',
+    iconUrl: '/image/sunny-icon.png',
   },
   onLoad(){
     this.getNow()
@@ -41,11 +45,14 @@ Page({
         let result = res.data.result
         let temp = result.now.temp
         let weather = result.now.weather
-        console.log(result),
+        let forecastArray = result.forecast
+        let forecastWeather = forecastArray.weather
+        console.log(forecastWeather),
         this.setData({
           nowTemp: temp +'°',
           nowWeather: weatherMap[weather],
           bgUrl:'/image/' + weather + '-bg.png',
+          forecast: forecastArray,
         })
         wx.setNavigationBarColor({
           frontColor: '#000000',
