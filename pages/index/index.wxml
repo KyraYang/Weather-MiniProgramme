@@ -10,9 +10,9 @@
 <scroll-view scroll-x>
   <view class='forecast-list'>
     <view class='forecast-item' wx:for="{{forecast}}">
-      <view class='forecast-time'>{{forecastTime}}</view>
-      <image class='weather-icon' src="{{iconUrl}}" mode='scaleToFill'></image>
-      <view class="forecast-temp">{{forecastTemp}}</view>
+      <view class='forecast-time'>{{item.time}}</view>
+      <image class='weather-icon' src="{{item.iconPath}}" mode='scaleToFill'></image>
+      <view class="forecast-temp">{{item.temp}}</view>
     </view>
   </view>
 </scroll-view>

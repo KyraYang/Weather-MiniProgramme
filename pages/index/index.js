@@ -19,10 +19,7 @@ Page({
     nowTemp: '14',
     nowWeather: 'Sunny',
     bgUrl: '/image/sunny-bg.png',
-    forecast:[1,2,3,4,5,6,7,8,9],
-    forecastTemp: '4',
-    forecastTime: '8',
-    iconUrl: '/image/sunny-icon.png',
+    forecast:[],
   },
   onLoad(){
     this.getNow()
@@ -43,26 +40,44 @@ Page({
       },
       success: res =>{
         let result = res.data.result
-        let temp = result.now.temp
-        let weather = result.now.weather
-        let forecastArray = result.forecast
-        let forecastWeather = forecastArray.weather
-        console.log(forecastWeather),
-        this.setData({
-          nowTemp: temp +'°',
-          nowWeather: weatherMap[weather],
-          bgUrl:'/image/' + weather + '-bg.png',
-          forecast: forecastArray,
-        })
-        wx.setNavigationBarColor({
-          frontColor: '#000000',
-          backgroundColor: weatherColorMap[weather],
-        })
+        this.setNow(result)
+        this.setHourly(result)
+        
       },
       complete: ()=>{
         callback && callback()
       }
     })
   },
-  
+  setNow(result){
+    let temp = result.now.temp
+    let weather = result.now.weather
+    let forecastArray = result.forecast
+    console.log(result),
+      this.setData({
+        nowTemp: temp + '°',
+        nowWeather: weatherMap[weather],
+        bgUrl: '/image/' + weather + '-bg.png',
+      })
+    wx.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: weatherColorMap[weather],
+    })
+  },
+  setHourly(result){
+    //set forecast
+    let forecast = []
+    let nowHour = new Date().getHours()
+    for (let i = 0; i < 8; i++) {
+      forecast.push({
+        time: (i * 3 + nowHour) % 24 + '时',
+        iconPath: '/image/' + result.forecast[i].weather + '-icon.png',
+        temp: result.forecast[i].temp,
+      })
+    }
+    forecast[0].time = '现在',
+      this.setData({
+        forecast: forecast,
+      })
+  }
 })
