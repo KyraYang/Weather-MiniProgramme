@@ -9,6 +9,5 @@
     "navigationBarTitleText": "天气小程序",
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true
-  },
-  "sitemapLocation": "sitemap.json"
+  }
 }
