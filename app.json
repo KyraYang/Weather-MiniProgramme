@@ -9,5 +9,10 @@
     "navigationBarTitleText": "天气小程序",
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于获取当前位置天气情况"
+    }
   }
 }

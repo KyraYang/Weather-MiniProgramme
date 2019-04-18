@@ -14,21 +14,24 @@ const weatherColorMap = {
   'heavyrain': '#c5ccd0',
   'snow': '#aae1fc'
 }
+// 引入SDK核心类
+const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
+
 Page({
-  onTapWeatherDetail(){
-    wx.redirectTo({
-      url: '/pages/list/list',
-    })
-  },
   data: {
     nowTemp: '14',
     nowWeather: 'Sunny',
     bgUrl: '/image/sunny-bg.png',
     forecast:[],
     todayTemp:'5-6',
-    nowDate:''
+    nowDate:'',
+    city:'北京市'
   },
   onLoad(){
+    this.qqmapsdk = new QQMapWX({
+      key: 'X76BZ-HPPKX-5ZP4Z-ZGO4C-QY6KF-APFYE' // 必填
+    })
+    console.log(this.qqmapsdk)
     this.getNow()
   },
   onPullDownRefresh(){
@@ -36,6 +39,33 @@ Page({
       wx.stopPullDownRefresh()
     })
   },
+
+  onTapWeatherDetail() {
+    wx.redirectTo({
+      url: '/pages/list/list',
+    })
+  },
+
+  onTapLocation() {
+    wx.getLocation({
+      success: res => {
+        console.log(this)
+        this.qqmapsdk.reverseGeocoder({
+          location: {
+            latitude: res.latitude,
+            longitude: res.longitude
+          },
+          success: function (res) {
+            console.log(res.result.address_component.city)
+          }
+        })
+      },
+    })
+  },
+
+
+
+
   getNow(callback){
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now?city=北京市',

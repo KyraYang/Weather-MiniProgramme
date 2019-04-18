@@ -20,11 +20,12 @@ Page({
         let result = res.data.result
         console.log(result[0])
         this.getForecast(result, today)
+      },
+       complete: () => {
+        callBack && callBack()
       }
     })
-    complete: () => {
-      callBack && callBack()
-    }
+   
   },
   getForecast(result, today) {
     let sevenDays = []
