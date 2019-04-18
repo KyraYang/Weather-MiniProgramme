@@ -1,10 +1,10 @@
 <view class='weather-wrapper'>
-  <view class='location-wrapper'>
-    <view class='location' bindtap='onTapLocation'>
+  <view class='location-wrapper' bindtap='onTapLocation'>
+    <view class='location' >
       <image class='location-icon' src='/image/location-icon.png'></image>
       <view class='city'>{{city}}</view>
     </view>
-    <view class='location-text' >点击获取当前位置</view>
+    <view class='location-text' >{{locationText}}</view>
   </view>
   <view class="temp">{{nowTemp}}</view>
   <view class='weather'>{{nowWeather}}</view>

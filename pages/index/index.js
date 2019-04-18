@@ -16,26 +16,25 @@ const weatherColorMap = {
 }
 // 引入SDK核心类
 const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
-
 Page({
   data: {
     nowTemp: '14',
     nowWeather: 'Sunny',
     bgUrl: '/image/sunny-bg.png',
-    forecast:[],
-    todayTemp:'5-6',
-    nowDate:'',
-    city:'北京市'
+    forecast: [],
+    todayTemp: '5-6',
+    nowDate: '',
+    city: '广州市',
+    locationText: '点击获取当前位置',
   },
-  onLoad(){
+  onLoad() {
     this.qqmapsdk = new QQMapWX({
       key: 'X76BZ-HPPKX-5ZP4Z-ZGO4C-QY6KF-APFYE' // 必填
     })
-    console.log(this.qqmapsdk)
     this.getNow()
   },
-  onPullDownRefresh(){
-    this.getNow(()=>{
+  onPullDownRefresh() {
+    this.getNow(() => {
       wx.stopPullDownRefresh()
     })
   },
@@ -49,14 +48,18 @@ Page({
   onTapLocation() {
     wx.getLocation({
       success: res => {
-        console.log(this)
         this.qqmapsdk.reverseGeocoder({
           location: {
             latitude: res.latitude,
             longitude: res.longitude
           },
-          success: function (res) {
-            console.log(res.result.address_component.city)
+          success: res => {
+            let city = res.result.address_component.city
+            this.setData({
+              city: city,
+              locationText: '',
+            })
+            this.getNow()
           }
         })
       },
@@ -66,27 +69,27 @@ Page({
 
 
 
-  getNow(callback){
+  getNow(callback) {
     wx.request({
-      url: 'https://test-miniprogram.com/api/weather/now?city=北京市',
+      url: 'https://test-miniprogram.com/api/weather/now',
       data: {
-       city:'北京市'
+        city: this.data.city
       },
       header: {
         'content-type': 'application/json'
       },
-      success: res =>{
+      success: res => {
         let result = res.data.result
         this.setNow(result)
         this.setHourly(result)
         this.setDetail(result)
       },
-      complete: ()=>{
+      complete: () => {
         callback && callback()
       }
     })
   },
-  setNow(result){
+  setNow(result) {
     let temp = result.now.temp
     let weather = result.now.weather
     let forecastArray = result.forecast
@@ -101,7 +104,7 @@ Page({
       backgroundColor: weatherColorMap[weather],
     })
   },
-  setHourly(result){
+  setHourly(result) {
     //set forecast
     let forecast = []
     let nowHour = new Date().getHours()
@@ -117,7 +120,7 @@ Page({
         forecast: forecast,
       })
   },
-  setDetail(result){
+  setDetail(result) {
     let date = new Date()
     let minTemp = result.today.minTemp
     let maxTemp = result.today.maxTemp

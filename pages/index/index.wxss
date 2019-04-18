@@ -23,6 +23,7 @@
 .location-text{
   margin-top: 10rpx;
   text-align: center;
+  height: 42rpx;
 }
 
 .temp {
