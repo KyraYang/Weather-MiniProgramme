@@ -16,6 +16,15 @@ const weatherColorMap = {
 }
 // 引入SDK核心类
 const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
+
+const UNPROMPTED = 0
+const UNAUTHORIZED = 1
+const AUTHORIZED = 2
+
+const UNPROMPTED_TIPS = '点击获取当前位置'
+const UNAUTHORIZED_TIPS = '点击开启位置权限'
+const AUTHORIZED_TIPS = ''
+
 Page({
   data: {
     nowTemp: '14',
@@ -25,8 +34,10 @@ Page({
     todayTemp: '5-6',
     nowDate: '',
     city: '广州市',
-    locationText: '点击获取当前位置',
+    locationTipsText: UNPROMPTED_TIPS,
+    locationAuthType: UNPROMPTED
   },
+  //启动load
   onLoad() {
     this.qqmapsdk = new QQMapWX({
       key: 'X76BZ-HPPKX-5ZP4Z-ZGO4C-QY6KF-APFYE' // 必填
@@ -38,16 +49,23 @@ Page({
       wx.stopPullDownRefresh()
     })
   },
-
+  //点击跳转7天预告页面
   onTapWeatherDetail() {
     wx.navigateTo({
       url: '/pages/list/list?city=' + this.data.city,
     })
   },
-
+  //点击获取当前地点
   onTapLocation() {
+    this.getLocation()
+  },
+  getLocation() {
     wx.getLocation({
       success: res => {
+        this.setData({
+          locationAuthType: AUTHORIZED,
+          locationTipsText: AUTHORIZED_TIPS
+        })
         this.qqmapsdk.reverseGeocoder({
           location: {
             latitude: res.latitude,
@@ -60,15 +78,18 @@ Page({
               locationText: '',
             })
             this.getNow()
-          }
+          },
         })
       },
+      fail: () => {
+        this.setData({
+          locationAuthType: UNAUTHORIZED,
+          locationTipsText: UNAUTHORIZED_TIPS
+        })
+      }
     })
   },
-
-
-
-
+  //获取weather API信息
   getNow(callback) {
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now',
@@ -89,6 +110,7 @@ Page({
       }
     })
   },
+  //设置现在天气情况
   setNow(result) {
     let temp = result.now.temp
     let weather = result.now.weather
@@ -104,8 +126,8 @@ Page({
       backgroundColor: weatherColorMap[weather],
     })
   },
+  //设置未来24小时天气情况
   setHourly(result) {
-    //set forecast
     let forecast = []
     let nowHour = new Date().getHours()
     for (let i = 0; i < 8; i++) {
@@ -120,6 +142,7 @@ Page({
         forecast: forecast,
       })
   },
+  //今天日期与天气（跳转栏）
   setDetail(result) {
     let date = new Date()
     let minTemp = result.today.minTemp
