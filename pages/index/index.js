@@ -59,6 +59,10 @@ Page({
               city: city,
               locationText: '',
             })
+            wx.setStorage({
+              key: 'city',
+              data: city,
+            })
             this.getNow()
           }
         })

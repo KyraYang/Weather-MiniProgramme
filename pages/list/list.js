@@ -1,7 +1,17 @@
-const weekDayMap = ['星期天','星期一', '星期二', '星期三', '星期四','星期五','星期六']
+const weekDayMap = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 Page({
-  data: {},
+  data: {
+    city: '广州市'
+  },
   onLoad() {
+    wx.getStorage({
+      key: 'city',
+      success: res => {
+        this.setData({
+          city: res.data
+        })
+      },
+    })
     this.getNow()
   },
   onPullDownRefresh() {
@@ -13,19 +23,20 @@ Page({
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/future',
       data: {
-        time:timestamp,
-        city: '北京市'
+        time: timestamp,
+        city: this.data.city
       },
       success: res => {
         let result = res.data.result
+        console.log(this.data.city)
         console.log(result[0])
         this.getForecast(result, today)
       },
-       complete: () => {
+      complete: () => {
         callBack && callBack()
       }
     })
-   
+
   },
   getForecast(result, today) {
     let sevenDays = []
