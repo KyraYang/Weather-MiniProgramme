@@ -21,9 +21,7 @@ const UNPROMPTED = 0
 const UNAUTHORIZED = 1
 const AUTHORIZED = 2
 
-const UNPROMPTED_TIPS = '点击获取当前位置'
-const UNAUTHORIZED_TIPS = '点击开启位置权限'
-const AUTHORIZED_TIPS = ''
+
 
 Page({
   data: {
@@ -34,7 +32,6 @@ Page({
     todayTemp: '5-6',
     nowDate: '',
     city: '广州市',
-    locationTipsText: UNPROMPTED_TIPS,
     locationAuthType: UNPROMPTED
   },
   //启动load
@@ -42,7 +39,23 @@ Page({
     this.qqmapsdk = new QQMapWX({
       key: 'X76BZ-HPPKX-5ZP4Z-ZGO4C-QY6KF-APFYE' // 必填
     })
-    this.getNow()
+    wx.getSetting({
+      success: res => {
+        let auth = res.authSetting['scope.userLocation']
+        let locationAuthType = auth ? AUTHORIZED:(auth === false)? UNAUTHORIZED:UNPROMPTED
+        this.setData({
+          locationAuthType: locationAuthType,
+        })
+        if (auth){
+          this.getLocationAndWeather()
+        }else {
+          this.getNow()
+        }
+      },
+      fail: ()=>{
+        this.getNow()
+      }
+    })
   },
   onPullDownRefresh() {
     this.getNow(() => {
@@ -57,14 +70,13 @@ Page({
   },
   //点击获取当前地点
   onTapLocation() {
-    this.getLocation()
+    this.getLocationAndWeather()
   },
-  getLocation() {
+  getLocationAndWeather() {
     wx.getLocation({
       success: res => {
         this.setData({
           locationAuthType: AUTHORIZED,
-          locationTipsText: AUTHORIZED_TIPS
         })
         this.qqmapsdk.reverseGeocoder({
           location: {
@@ -75,7 +87,6 @@ Page({
             let city = res.result.address_component.city
             this.setData({
               city: city,
-              locationText: '',
             })
             this.getNow()
           },
@@ -84,7 +95,6 @@ Page({
       fail: () => {
         this.setData({
           locationAuthType: UNAUTHORIZED,
-          locationTipsText: UNAUTHORIZED_TIPS
         })
       }
     })

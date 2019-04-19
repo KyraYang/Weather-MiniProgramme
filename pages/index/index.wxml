@@ -1,20 +1,24 @@
 <view class='weather-wrapper'>
- <button class="location-wrapper" open-type="{{ locationAuthType == 1 ?'openSetting' : ''}}" bindopensetting="onTapLocation" bindtap="onTapLocation" plain="true">
+  <button class="location-wrapper" open-type="{{ locationAuthType == 1 ?'openSetting' : ''}}" bindopensetting="onTapLocation" bindtap="onTapLocation" plain="true">
     <view class='location'>
       <image class='location-icon' src='/image/location-icon.png'></image>
       <view class='city'>{{city}}</view>
     </view>
-    <view class='location-text'>{{locationTipsText}}</view>
-</button>
-<view class="temp">{{nowTemp}}</view>
-<view class='weather'>{{nowWeather}}</view>
-<image class='weather-bg' src="{{bgUrl}}" mode='scaleToFill'></image>
-<view class='weather-detail' bindtap='onTapWeatherDetail'>
-  <view class='nowDate'>{{nowDate}}
+    <view class='location-text'>
+      <view wx:if='{{locationAuthType == 0}}'>点击获取当前位置</view>
+      <view wx:elif='{{locationAuthType == 1}}'>点击开启位置权限</view>
+      <view wx:elif='{{locationAuthType == 2}}'></view>
+    </view>
+  </button>
+  <view class="temp">{{nowTemp}}</view>
+  <view class='weather'>{{nowWeather}}</view>
+  <image class='weather-bg' src="{{bgUrl}}" mode='scaleToFill'></image>
+  <view class='weather-detail' bindtap='onTapWeatherDetail'>
+    <view class='nowDate'>{{nowDate}}
+    </view>
+    <view class='estTemp'>{{todayTemp}}</view>
+    <image class='arrow' src='/image/arrow.png'></image>
   </view>
-  <view class='estTemp'>{{todayTemp}}</view>
-  <image class='arrow' src='/image/arrow.png'></image>
-</view>
 </view>
 
 <view class="timetips">
