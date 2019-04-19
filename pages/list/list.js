@@ -1,7 +1,12 @@
 const weekDayMap = ['星期天','星期一', '星期二', '星期三', '星期四','星期五','星期六']
 Page({
-  data: {},
-  onLoad() {
+  data: {
+    city: '广州市'
+  },
+  onLoad(option) {
+    this.setData({
+      city: option.city
+    })
     this.getNow()
   },
   onPullDownRefresh() {
@@ -14,11 +19,12 @@ Page({
       url: 'https://test-miniprogram.com/api/weather/future',
       data: {
         time:timestamp,
-        city: '北京市'
+        city: this.data.city
       },
       success: res => {
         let result = res.data.result
         console.log(result[0])
+        console.log(this.data.city)
         this.getForecast(result, today)
       },
        complete: () => {

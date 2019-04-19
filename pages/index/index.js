@@ -40,8 +40,8 @@ Page({
   },
 
   onTapWeatherDetail() {
-    wx.redirectTo({
-      url: '/pages/list/list',
+    wx.navigateTo({
+      url: '/pages/list/list?city=' + this.data.city,
     })
   },
 
